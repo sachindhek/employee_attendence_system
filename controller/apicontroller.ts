@@ -2,9 +2,17 @@ import { Request, Response } from "express";
 const queries = require("../service/queries");
 
 const loginEmployee = async (req: Request, res: Response) => {
-  const { emp_email, emp_password } = req.params;
-  await queries.employeeLogin(emp_email, emp_password);
-  res.json({ message: "success" });
+  const { emp_email, emp_password } = req.body;
+
+  const user = await queries.employeeLogin(emp_email, emp_password);
+
+  if (user.emp_email !== emp_email && user.emp_password !== emp_password) {
+    res.json({
+      message: "wrong user authenticated, please check your email or password",
+    });
+  } else {
+    res.json({ message: "success" });
+  }
 };
 
 const postEmployee = async (req: Request, res: Response) => {
@@ -51,3 +59,7 @@ const postEmployee = async (req: Request, res: Response) => {
 };
 
 module.exports = { loginEmployee, postEmployee };
+
+// else if (emp_password !== userPassword) {
+//   res.json({ message: "password is not matched" });
+// }

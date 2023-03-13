@@ -2,10 +2,15 @@ import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
-const employeeLogin = async (id: number) => {
-  return prisma.employee.findUnique({
+const employeeLogin = async (emp_email: string, emp_password: string) => {
+  return prisma.employee.findMany({
     where: {
-      id: id,
+      AND: [
+        {
+          emp_email,
+          emp_password,
+        },
+      ],
     },
     select: {
       emp_email: true,
